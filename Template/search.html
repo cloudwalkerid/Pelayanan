@@ -1,0 +1,62 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card align-items-center" style="padding: 20px">
+                        <!-- <div class="card-header">
+                    <strong>Horizontal</strong> Form
+                </div> -->
+                        <img src="{% static 'images/logo-3.png' %}" />
+                        <p style="font-size:20px">CARI PUBLIKASI</p>
+                        <form method="POST" action="{% url 'hasil_cari' %}">
+                                {% csrf_token %}
+                            <div class="rs-select2--dark rs-select2--sm" style="margin: 10px">
+                                <select class="js-select2" name="jenis" id="jenis">
+                                    <option selected="selected" value="publikasi">Publikasi</option>
+                                    <option value="table">Table</option>
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <input type="text" id="seacrh" name="seacrh" placeholder="Cari..." class="form-control"
+                                        required>
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary btn-sm" style="margin-right: 30px">
+                                    <i class="fa fa-dot-circle-o"></i> Cari
+                                </button>
+                                <button type="reset" class="btn btn-danger btn-sm" onclick="resetkasa()">
+                                    <i class="fa fa-ban"></i> Reset
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function resetkasa() {
+        document.getElementById('search').value = '';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Hasil Tabel</h3>
+                    <strong id="namaTable" style="margin-bottom: 30px;"></strong>
+                    <div class="table-data__tool">
+
+                        <div class="table-data__tool-right">
+                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                <select class="js-select2" name="type" id="type_export">
+                                    <option value="0" selected="selected">Export</option>
+                                    <option value="1">Excell</option>
+                                    <option value="2">CSV</option>
+                                    <option value="3">JSON</option>
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                            <button class="btn au-btn-filter" type="button" onclick="exportData()">
+                                <i class="zmdi zmdi-filter-list"></i>Export</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table5" id='table_hasil'>
+                            
+                            <tr>
+                                <td rowspan="2"></td>
+                                <th colspan="2" scope="colgroup">Mars</th>
+                                <th colspan="2" scope="colgroup">Venus</th>
+                            </tr>
+                            <tr>
+                                <th scope="col">Produced</th>
+                                <th scope="col">Sold</th>
+                                <th scope="col">Produced</th>
+                                <th scope="col">Sold</th>
+                            </tr>
+                            <tr>
+                                <th scope="row">Teddy Bears</th>
+                                <td>50,000</td>
+                                <td>30,000</td>
+                                <td>100,000</td>
+                                <td>80,000</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Board Games</th>
+                                <td>10,000</td>
+                                <td>5,000</td>
+                                <td>12,000</td>
+                                <td>9,000</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="#" id="test" class="d-none">download</a>
+<script>
+    var hasilTabel = {{ hasil |safe }};
+    //console.log(JSON.stringify(hasilTabel));
+    //var coba = JSON.parse(hasilTabel);
+    
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container" style="margin-top: 10px; margin-bottom: 15px;">
+            <div class="login-content">
+                <div class="login-logo">
+                    <a href="#">
+                        <img src="{% static 'images/icon/logo.png' %}" alt="CoolAdmin">
+                    </a>
+                </div>
+                <div class="login-form">
+                    <form action="{% url 'profile' %}" method="post"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input class="au-input au-input--full" type="text" name="Username" id="usernameID" placeholder="Username"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ganti Password</label>
+                            <select class="custom-select" name="type_password" id="type_password" required>
+                                <option selected="selected" value="tidak">Tidak</option>
+                                <option value="ya">Ya</option>
+                            </select>
+                        </div>
+                        <div class="form-group d-none" id="passwordWrapp">
+                            <label>Password</label>
+                            <input class="au-input au-input--full" id="passwordID" type="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input class="au-input au-input--full" type="text" id="namaLengkapID" name="nama" placeholder="Nama" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Seksi</label>
+                            <select class="custom-select" name="seksi" id="seksi-01" required>
+                                <option selected="selected" value="lainnya">Lainnya</option>
+                                <option value="ipds">IPDS</option>
+                                <option value="nerwilis">Nerwilis</option>
+                                <option value="sosial">Sosial</option>
+                                <option value="produksi">Produksi</option>
+                                <option value="distribusi">Distibusi</option>
+                                <option value="tu">TU</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            <select class="custom-select" name="jabatan" id="jabatan-01" required>
+                                <option class="lainnya-opt" selected="selected" value="ksk">KSK</option>
+                                <option class="lainnya-opt" value="kepala">Kepala</option>
+                                <option class="yess-opt" value="staf">Staff</option>
+                                <option class="yess-opt" value="kasi">KASI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Photo</label>
+                            <input class="au-input au-input--full" type="file" name="photo" placeholder="photo" accept=".jpeg,.png,.jpg">
+                        </div>
+                        <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Simpan Perubahan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nama = '{{user.username}}';
+    var namaLengkap = '{{user.nama}}';
+    var seksi = '{{user.seksi}}';
+    var jabatan = '{{user.jabatan}}';
+</script>
+{% endblock %}

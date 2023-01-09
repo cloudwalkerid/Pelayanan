@@ -1,0 +1,152 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Koleksi Publikasi</h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <form method="GET" action="{% url 'koleksi_publikasi' %}">
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="banyak" id="banyak">
+                                        <option selected value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="seksi" id="seksi">
+                                        <option selected="selected" value="">Seksi</option>
+                                        <option value="ipds">IPDS</option>
+                                        <option value="nerwilis">Nerwilis</option>
+                                        <option value="sosial">Sosial</option>
+                                        <option value="produksi">Produksi</option>
+                                        <option value="distribusi">Distibusi</option>
+                                        <option value="tu">TU</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                <input class="au-input" type="text" name="search" id="search" placeholder="Kata Kunci"
+                                    style="margin-right: 10px" />
+                                <button class="btn au-btn-filter" type="submit">
+                                    <i class="zmdi zmdi-filter-list"></i>filters</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% if publikasis is None %}
+                    <h3 class="title-5 m-b-35">Tidak ada Publikasi</h3>
+                    {% else %}
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>nama</th>
+                                    <th>deskripsi</th>
+                                    <th>seksi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item_publikasi in publikasis %}
+                                <tr class="tr-shadow">
+                                    <td style="width :150px; padding: 20px" class="koleksi-publikasi-item">
+                                        {% if item_publikasi.type_pub == 'pdf' %}
+                                        {% with 'media/Publikasi/images/'|add:item_publikasi.uuid|add:'-1.jpg' as cover_publikasi%}
+                                        <img height="150px;" width="150px;" src="{% static cover_publikasi %}" />
+                                        {% endwith %}
+                                        {% elif item_publikasi.type_pub == 'xlsx' or item_publikasi.type_pub == 'xls' %}
+                                        <img height="150px;" width="150px;" src="{% static 'images/excel.png' %}" />
+                                        {% endif %}
+                                       
+                                    </td>
+                                    <td>{{item_publikasi.judul}}</td>
+                                    <td class="desc">{{item_publikasi.deskripsi}}</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process" style="text-transform: uppercase">{{item_publikasi.seksi}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            {% if item_publikasi.type_pub == 'pdf' %}
+                                            {% with 'media/Publikasi/pdf/'|add:item_publikasi.uuid|add:'.pdf' as url_pdf%}
+                                            <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                            {% endwith %}
+                                            {% elif item_publikasi.type_pub == 'xlsx' %}
+                                            {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xlsx' as url_pdf%}
+                                            <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                            {% endwith %}
+                                            {% elif item_publikasi.type_pub == 'xls' %}
+                                            {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xls' as url_pdf%}
+                                            <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                            {% endwith %}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;"></nav>
+                    {% if publikasis.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if publikasis.has_previous %}
+                        <li class="page-item"><a href="?page={{ publikasis.previous_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in publikasis.paginator.page_range %}
+                        {% if publikasis.number == i %}
+                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                        <li class="page-item"><a href="?page={{ i }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">{{
+                                i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if publikasis.has_next %}
+                        <li class="page-item"><a href="?page={{ publikasis.next_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var banyak = '{{banyak}}';
+    var seksi = '{{seksi}}';
+    var search = '{{search}}';
+    document.getElementById("banyak").value = banyak;
+    document.getElementById("seksi").value = seksi;
+    document.getElementById("search").value = search;
+</script>
+{% endblock %}

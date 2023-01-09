@@ -1,0 +1,5 @@
+/.idea
+/.vscode
+/whoosh/*
+/static/media
+/venv

@@ -1,0 +1,297 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- MAIN CONTENT-->
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Koleksi Data Mikro</h3>
+                    <div class="table-data__tool">
+
+                        <div class="table-data__tool-left">
+                            <form method="GET" action="{% url 'masukkan_data_mikro' %}">
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="banyak" id="banyak">
+                                        <option selected value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="seksi" id="seksi">
+                                        <option selected="selected" value="">Seksi</option>
+                                        <option value="ipds">IPDS</option>
+                                        <option value="nerwilis">Nerwilis</option>
+                                        <option value="sosial">Sosial</option>
+                                        <option value="produksi">Produksi</option>
+                                        <option value="distribusi">Distibusi</option>
+                                        <option value="tu">TU</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                {% endif %}
+                                <input class="au-input" type="text" name="search" id="search" placeholder="Kata Kunci"
+                                    style="margin-right: 10px" />
+                                <button class="btn au-btn-filter" type="submit">
+                                    <i class="zmdi zmdi-filter-list"></i>filters</button>
+                            </form>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                                data-target="#addNewDataMikro">
+                                <i class="zmdi zmdi-plus"></i>Tambah Data Mikro</button>
+                        </div>
+                    </div>
+                    {% if dataSourceShow is None %}
+                    <h3 class="title-5 m-b-35">Tidak ada Data Mikro</h3>
+                    {% else %}
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th>nama</th>
+                                    <th>deskripsi</th>
+                                    <th>tanggal</th>
+                                    <th>seksi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for item_dataSourceShow in dataSourceShow %}
+                                    <tr class="tr-shadow">
+                                        <td>{{item_dataSourceShow.nama}}</td>
+                                        <td class="desc">{{item_dataSourceShow.deskripsi}}</td>
+                                        <td>{{item_dataSourceShow.create_at|date:"m/d/Y"}}</td>
+                                        <td style="width: 100px">
+                                            <span class="status--process" style="text-transform: uppercase">{{item_dataSourceShow.seksi}}</span>
+                                        </td>
+                                        <td>
+                                            <div class="table-data-feature">
+                                                {% with 'media/DBF/'|add:item_dataSourceShow.uuid|add:'.dbf' as url_dbf%}
+                                                <button class="item edit_data" data-toggle="tooltip" data-placement="top" title="Ubah" data-uuid="{{item_dataSourceShow.uuid}}" data-url="{% static url_dbf %}">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                {% endwith %}
+                                                <button class="item hapus_data" data-toggle="tooltip" data-placement="top" title="Hapus" data-uuid="{{item_dataSourceShow.uuid}}">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </button>
+                                                {% with 'media/DBF/'|add:item_dataSourceShow.uuid|add:'.dbf' as url_dbf%}
+                                                <button class="item download_data" data-toggle="tooltip" data-placement="top" title="Unduh" data-uuid="{{item_dataSourceShow.uuid}}" data-url="{% static url_dbf %}">
+                                                    <i class="zmdi zmdi-download"></i>
+                                                </button>
+                                                {% endwith %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="spacer"></tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;"></nav>
+                    {% if dataSourceShow.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if dataSourceShow.has_previous %}
+                        <li class="page-item"><a href="?page={{ dataSourceShow.previous_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in dataSourceShow.paginator.page_range %}
+                        {% if dataSourceShow.number == i %}
+                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                        <li class="page-item"><a href="?page={{ i }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">{{
+                                i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if dataSourceShow.has_next %}
+                        <li class="page-item"><a href="?page={{ dataSourceShow.next_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                    </nav>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- END MAIN CONTENT-->
+<!-- END PAGE CONTAINER-->
+<div class="modal fade" id="addNewDataMikro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data MIkro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_data_mikro' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action" name="action" value="tambah" required>
+                    <div class="form-group">
+                        <label for="new-publikasi-judul" class="col-form-label">Nama :</label>
+                        <input type="text" class="form-control" id="new-data-nama" name="nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-deskripsi" class="col-form-label">Deskripsi :</label>
+                        <textarea class="form-control" id="new-data-deskripsi" name="deskripsi" required></textarea>
+                    </div>
+                    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Seksi :</label>
+                        <select class="js-select2" name="seksi" required>
+                            <option value="ipds" selected>IPDS</option>
+                            <option value="nerwilis">Nerwilis</option>
+                            <option value="sosial">Sosial</option>
+                            <option value="produksi">Produksi</option>
+                            <option value="distribusi">Distibusi</option>
+                            <option value="tu">TU</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                    {% else %}
+                    <input type="text" class="d-none" name="seksi" value="{{user.seksi}}" required>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Data Mikro :</label>
+                        <input type="file" id="new-publikasi-file" name="file" accept=".dbf" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editDataMikro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Perbarui Data Mikro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_data_mikro' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action_edit" name="action" value="ubah" required>
+                    <input type="text" class="d-none" id="uuid_edit" name="uuid"  required>
+                    <div class="form-group">
+                        <label for="new-publikasi-judul" class="col-form-label">Nama :</label>
+                        <input type="text" class="form-control" id="edit-data-nama" name="nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-deskripsi" class="col-form-label">Deskripsi :</label>
+                        <textarea class="form-control" id="edit-data-deskripsi" name="deskripsi" required></textarea>
+                    </div>
+                    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Seksi :</label>
+                        <select class="js-select2" id="seksi-edit" name="seksi" required>
+                            <option value="ipds" selected>IPDS</option>
+                            <option value="nerwilis">Nerwilis</option>
+                            <option value="sosial">Sosial</option>
+                            <option value="produksi">Produksi</option>
+                            <option value="distribusi">Distibusi</option>
+                            <option value="tu">TU</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                    {% else %}
+                    <input type="text" class="d-none" id="seksi-edit" name="seksi" value="{{user.seksi}}" required>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Publikasi Baru:</label>
+                        <input type="file" id="file-edit" name="file" accept=".xls,.xlsx,.pdf" required />
+                    </div>
+                    <a href="" id="file-lama">Fail Publikasi Lama</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="hapusDataMikro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Hapus Data Mikro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_data_mikro' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action_hapus" name="action" value="hapus" required>
+                    <input type="text" class="d-none" id="uuid_hapus" name="uuid"  required>
+                    <p>Apakah anda yakin menghapus data mikro <br/><b><span id="nama_hapus"></span></b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var banyak = '{{banyak}}';
+    var seksi = '{{seksi}}';
+    var search = '{{search}}';
+    document.getElementById("banyak").value = banyak;
+    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+    document.getElementById("seksi").value = seksi;
+    {% endif %}
+    document.getElementById("search").value = search;
+</script>
+<script>
+    var data_list = [];
+
+    {% for item_dataSourceShow in dataSourceShow %}
+        data_list.push({
+            uuid: '{{item_dataSourceShow.uuid}}',
+            nama: '{{item_dataSourceShow.nama}}',
+            deskripsi: '{{item_dataSourceShow.deskripsi}}'
+        });
+    {% endfor %}
+    // alert(publikasi_list);
+</script>
+{% endblock %}

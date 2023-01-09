@@ -1,0 +1,165 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Pengguna</h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <div class="rs-select2--light rs-select2--md">
+                                <select class="js-select2" name="property">
+                                    <option selected value="10">Banyak</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                            <div class="rs-select2--light rs-select2--sm">
+                                <select class="js-select2" name="time">
+                                    <option selected="selected" value="0">Seksi</option>
+                                    <option value="1">IPDS</option>
+                                    <option value="2">Nerwilis</option>
+                                    <option value="3">Sosial</option>
+                                    <option value="4">Produksi</option>
+                                    <option value="5">Distibusi</option>
+                                    <option value="6">TU</option>
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                            <input class="au-input" type="text" name="search" placeholder="Kata Kunci" style="margin-right: 10px" />
+                            <button class="btn au-btn-filter" type="button">
+                                <i class="zmdi zmdi-filter-list"></i>filters</button>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                                data-target="#addNewPublikasi">
+                                <i class="zmdi zmdi-plus"></i>Tambah Pengguna</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table6">
+                            <thead>
+                                <tr>
+                                    <th>nama</th>
+                                    <th>NIP</th>
+                                    <th>seksi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="tr-shadow">
+                                    <td style="width: 200px">Lori Lynch</td>
+                                    <td style="width: 200px">19950408 201802 1 001</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process">Processed</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Ubah">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Hapus">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Unduh">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                <tr class="tr-shadow">
+                                    <td style="width: 200px">Lori Lynch</td>
+                                    <td style="width: 200px">19950408 201802 1 001</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process">Processed</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Ubah">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Hapus">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Unduh">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                <tr class="tr-shadow">
+                                    <td style="width: 200px">Lori Lynch</td>
+                                    <td style="width: 200px">19950408 201802 1 001</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process">Processed</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Ubah">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Hapus">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Unduh">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                <tr class="tr-shadow">
+                                    <td style="width: 200px">Lori Lynch</td>
+                                    <td style="width: 200px">19950408 201802 1 001</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process">Processed</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Ubah">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Hapus">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Unduh">
+                                                <i class="zmdi zmdi-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

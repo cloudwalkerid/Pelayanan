@@ -1,0 +1,352 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Koleksi Kegiatan Versioning</h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <form method="GET" action="{% url 'versioning' %}">
+                                <div class="rs-select2--light rs-select2--md">
+                                    <select class="js-select2" name="banyak" id="banyak">
+                                        <option selected value="10">Banyak</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="seksi" id="seksi">
+                                        <option selected="selected" value="0">Seksi</option>
+                                        <option value="1">IPDS</option>
+                                        <option value="2">Nerwilis</option>
+                                        <option value="3">Sosial</option>
+                                        <option value="4">Produksi</option>
+                                        <option value="5">Distibusi</option>
+                                        <option value="6">TU</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                <input class="au-input" type="text" name="search" id="search" placeholder="Kata Kunci"
+                                    style="margin-right: 10px" />
+                                <button class="btn au-btn-filter" type="submit">
+                                    <i class="zmdi zmdi-filter-list"></i>filters</button>
+                            </form>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                                data-target="#addNewKegiatan">
+                                <i class="zmdi zmdi-plus"></i>Tambah Kegiatan</button>
+                        </div>
+                    </div>
+                    {% if kegiatanShow is None %}
+                    <h3 class="title-5 m-b-35">Tidak ada Kegiatan Versioning</h3>
+                    {% else %}
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th>nama</th>
+                                    <th>deskripsi</th>
+                                    <th>seksi</th>
+                                    <th>Data Entri</th>
+                                    <th>Basis Data</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item_kegiatan in kegiatanShow %}
+                                <tr class="tr-shadow">
+                                    <td>{{item_kegiatan.nama}}</td>
+                                    <td class="desc">{{item_kegiatan.deskripsi}}</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process">{{item_kegiatan.seksi}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            {% if item_kegiatan.latestAplikasi is None %}
+                                            <div class="row">
+                                                <div class="col-12" style="margin-bottom: 10px">
+                                                    <span>Tidak Ada</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <button class="item ungguh_app" data-toggle="tooltip" data-placement="top"
+                                                            title="Unggah Aplikasi Baru"  data-uuid="{{item_kegiatan.uuid}}" data-nama="{{item_kegiatan.nama}}">
+                                                            <i class="zmdi zmdi-upload"></i>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="row">
+                                                <div class="col-12" style="margin-bottom: 10px">
+                                                    <span>Versi : {{item_kegiatan.latestAplikasi.versi}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <button class="item ungguh_app" data-toggle="tooltip" data-placement="top"
+                                                            title="Unggah Aplikasi Baru"  data-uuid="{{item_kegiatan.uuid}}" data-nama="{{item_kegiatan.nama}}">
+                                                            <i class="zmdi zmdi-upload"></i>
+                                                        </button>
+                                                        <button class="item unduh_app" data-toggle="tooltip" data-placement="top"
+                                                            title="Unduh Aplikasi" data-url="{{item_kegiatan.latestAplikasi.url}}">
+                                                            <i class="zmdi zmdi-download"></i>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            {% if item_kegiatan.latestBasisData is None %}
+                                            <div class="row">
+                                                <div class="col-12" style="margin-bottom: 10px">
+                                                    <span>Tidak Ada</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <button class="item ungguh_basisdata" data-toggle="tooltip" data-placement="top"
+                                                            title="Unggah Basis Data Baru" data-uuid="{{item_kegiatan.uuid}}" data-nama="{{item_kegiatan.nama}}">
+                                                            <i class="zmdi zmdi-upload"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="row">
+                                                <div class="col-12" style="margin-bottom: 10px">
+                                                    <span>Versi : {{item_kegiatan.latestBasisData.versi}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <button class="item ungguh_basisdata" data-toggle="tooltip" data-placement="top"
+                                                            title="Unggah Basis Data Baru" data-uuid="{{item_kegiatan.uuid}}" data-nama="{{item_kegiatan.nama}}">
+                                                            <i class="zmdi zmdi-upload"></i>
+                                                        </button>
+                                                        <button class="item unduh_basisdata" data-toggle="tooltip" data-placement="top"
+                                                            title="Unduh Basis Data" data-url="{{item_kegiatan.latestBasisData.url}}">
+                                                            <i class="zmdi zmdi-download"></i>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item hapus_kegiatan" data-toggle="tooltip" data-placement="top" 
+                                                title="Hapus" data-uuid="{{item_kegiatan.uuid}}" data-nama="{{item_kegiatan.nama}}">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;"></nav>
+                    {% if kegiatanShow.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if kegiatanShow.has_previous %}
+                        <li class="page-item"><a href="?page={{ kegiatanShow.previous_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in kegiatanShow.paginator.page_range %}
+                        {% if kegiatanShow.number == i %}
+                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                        <li class="page-item"><a href="?page={{ i }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">{{
+                                i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if kegiatanShow.has_next %}
+                        <li class="page-item"><a href="?page={{ kegiatanShow.next_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                    </nav>
+                    {% endif %}
+
+                    <!-- END DATA TABLE -->
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addNewKegiatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Kegiatan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'input_kegiatan' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Nama Kegiatan :</label>
+                        <input type="text" name="nama" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-deskripsi" class="col-form-label">Deskripsi Kegiatan :</label>
+                        <textarea class="form-control" name="deskripsi" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Seksi :</label>
+                        <select class="js-select2" name="seksi" required>
+                            <option value="ipds" selected>IPDS</option>
+                            <option value="nerwilis">Nerwilis</option>
+                            <option value="sosial">Sosial</option>
+                            <option value="produksi">Produksi</option>
+                            <option value="distribusi">Distibusi</option>
+                            <option value="tu">TU</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Versi Aplikasi :</label>
+                        <input type="text" class="form-control" name="versi_aplikasi">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Aplikasi Awal :</label>
+                        <input type="file" name="aplikasi_awal" accept=".exe,.msi" />
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Versi Basis Data :</label>
+                        <input type="text" class="form-control" name="versi_basis_data">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Basis Awal :</label>
+                        <input type="file" name="basis_data_awal" accept=".zip,.rar" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addNewVersiAplikasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Aplikasi <span class="namaKegiatanAktive"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'update_aplikasi' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Versi Aplikasi Ini:</label>
+                        <input type="text" class="form-control" name="versi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Aplikasi Awal:</label>
+                        <input type="file" name="aplikasi" accept=".exe,.msi" required />
+                    </div>
+                    <input type="text" id="uuid_kegiatan_update_aplikasi" class="form-control d-none" name="uuid_kegiatan" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addNewBasisDataVersi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Basis Data <span class="namaKegiatanAktive"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'update_basis_data' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Versi Basis Data Ini:</label>
+                        <input type="text" class="form-control" name="versi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Basis Data:</label>
+                        <input type="file" name="basis_data" accept=".zip,.rar" required />
+                    </div>
+                    <input type="text" id="uuid_kegiatan_update_basis_data" class="form-control d-none" name="uuid_kegiatan" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="hapusKegiatanModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Hapus Kegiatan <span class="namaKegiatanAktive"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'delete_kegiatan' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Hapus kegiatan ini ?</p>
+                    <input type="text" class="form-control  d-none" name="delete_kegiatan_uuid" id="delete_kegiatan_uuid" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger">Kirim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+{% endblock %}

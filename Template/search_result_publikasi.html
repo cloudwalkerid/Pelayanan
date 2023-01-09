@@ -1,0 +1,244 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- MAP DATA-->
+                    {% if hasilPub|length > 0 %}
+
+                    <div class="map-data">
+                        <h5 class="title-5">
+                            <i class="zmdi zmdi-book"></i> Publikasi Dengan Judul Atau Deksripsi Sesuai Pencarian "{{search_kalimat}}"</h5>
+                        <div class="map-wrap m-t-45 m-b-20">
+                            <div class="owl-carousel  owl-theme" id="container_pub">
+                                {% for item_publikasi in hasilPub %}
+                                <div class="item item-pub">
+                                    <img src="{{ item_publikasi.halaman_image }}" alt="Avatar" class="image_pub" style="width:12rem;">
+                                    <div class="middle">
+                                        <p>{{item_publikasi.judul}}</p>
+                                        <a href="{{item_publikasi.download}}" class="btn btn-primary btn-lg active"
+                                            role="button" aria-pressed="true" data-toggle="tooltip" data-placement="top"
+                                            title="Unduh">
+                                            <i class="zmdi zmdi-download"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            {% if page_pub > 1 %}
+                            <form action="{% url 'hasil_cari' %}" method="POST" id="pub_previus_xx_form">
+                                {% csrf_token %}
+                                <input name="jenis" value="publikasi" type="text" class="d-none" required>
+                                <input name="page_pub" value="{{ page_pub|add:'-1' }}" type="text" class="d-none" required>
+                                <input name="page_hal" value="{{page_hal}}" type="text" class="d-none" required>
+                                <input name="seacrh" value="{{search_kalimat}}" type="text" class="d-none" required>
+                                <input name="hasil" value="" type="text" class="d-none" id="pub_previus_xx_hasil" required>
+                                <button type="reset" class="btn btn-light btn-sm" style="margin-right: 5px;" id="pub_previus_xx">
+                                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                                </button>
+                            </form>
+                            {% endif %}
+                            <form action="{% url 'hasil_cari' %}" method="POST" id="pub_next_xx_form">
+                                {% csrf_token %}
+                                <input name="jenis" value="publikasi" type="text" class="d-none" required>
+                                <input name="page_pub" value="{{ page_pub|add:'1'}} " type="text" class="d-none" required>
+                                <input name="page_hal" value="{{page_hal}}" type="text" class="d-none" required>
+                                <input name="seacrh" value="{{search_kalimat}}" type="text" class="d-none" required>
+                                <input name="hasil" value="" type="text" class="d-none" id="pub_next_xx_hasil" required>
+                                <button type="reset" class="btn btn-light btn-sm" id="pub_next_xx">
+                                    Berikutnya <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% endif %}
+                    <!-- END MAP DATA-->
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12">
+                    <!-- MAP DATA-->
+                    <div class="map-data">
+                        <h3 class="title-3">
+                            <i class="zmdi zmdi-file-text"></i> Halaman yang sesuai dengan pencarian "{{search_kalimat}}"</h3>
+
+                        <div class="map-wrap m-t-45 m-b-20">
+                            <div class="owl-carousel  owl-theme" id="container_hal">
+                                {% for item_halaman in hasilHal %}
+                                <div class="item item-pub">
+                                    <img src="{{item_halaman.halaman_image}}" alt="Avatar" class="image_pub" style="width:12rem;">
+                                    <div class="middle">
+                                        <b>{{item_halaman.judul}}</b>
+                                        <p>Hal {{item_halaman.halaman}}</p>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-primary btn-sm preview-image" style="margin-right: 5px;"
+                                                data-image="{{item_halaman.halaman_image}}" data-toggle="tooltip"
+                                                data-placement="top" title="Lihat" data-uuid="{{item_halaman.uuid_publikasi}}"
+                                                data-halaman="{{item_halaman.halaman}}">
+                                                <i class="fas fa-search-plus"></i>
+                                            </button>
+                                            <button class="btn btn-info btn-sm tambah_result" data-toggle="tooltip"
+                                                data-halamanImage="{{item_halaman.halaman_image}}" data-placement="top"
+                                                title="Tambahkan ke hasil" data-uuid="{{item_halaman.uuid_publikasi}}"
+                                                data-halaman="{{item_halaman.halaman}}">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            {% if page_hal > 1 %}
+                            <form action="{% url 'hasil_cari' %}" method="POST" id="hal_previus_xx_form">
+                                {% csrf_token %}
+                                <input name="jenis" value="publikasi" type="text" class="d-none" required>
+                                <input name="page_pub" value="{{page_pub}}" type="text" class="d-none" required>
+                                <input name="page_hal" value="{{ page_hal|add:'-1' }}" type="text" class="d-none" required>
+                                <input name="seacrh" value="{{search_kalimat}}" type="text" class="d-none" required>
+                                <input name="hasil" value="" type="text" class="d-none" id="hal_previus_xx_hasil" required>
+                                <button type="reset" class="btn btn-light btn-sm" style="margin-right: 5px;"  id="hal_previus_xx">
+                                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                                </button>
+                            </form>
+                            
+                            {% endif %}
+
+                            <form action="{% url 'hasil_cari' %}" method="POST" id="hal_next_xx_form">
+                                {% csrf_token %}
+                                <input name="jenis" value="publikasi" type="text" class="d-none" required>
+                                <input name="page_pub" value="{{page_pub}}" type="text" class="d-none" required>
+                                <input name="page_hal" value="{{ page_hal|add:'1' }}" type="text" class="d-none" required>
+                                <input name="seacrh" value="{{search_kalimat}}" type="text" class="d-none" required>
+                                <input name="hasil" value="" type="text" class="d-none" id="hal_next_xx_hasil" required>
+                                <button type="reset" class="btn btn-light btn-sm" id="hal_next_xx">
+                                    Berikutnya <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <hr style="border-width: 2px;">
+                        <div class="table-data__tool" style="margin-top: 5px;">
+                            <div class="table-data__tool-right">
+                                <button class="au-btn au-btn-icon au-btn--green au-btn--small" id="preview_hasil">
+                                    <i class="zmdi zmdi-folder"></i>Kumpulan Hasil (<span id="banyak_kjd"></span>
+                                    Halaman)</button>
+                                <button class="au-btn au-btn-icon au-btn--green au-btn--small" id="download_hasil">
+                                    <i class="zmdi zmdi-download"></i>Download Kumpulan Hasil</button>
+                            </div>
+                        </div>
+                        <!-- END MAP DATA-->
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="copyright">
+                            <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="submit" class="btn btn-light btn-sm" style="margin-right: 5px;" data-toggle="tooltip"
+                        data-placement="top" title="Sebelumnya" id="preview_previous">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h5 class="modal-title" id="myModalLabel" style="margin-right: 5px;"><span id="judul_review">25</span>
+                        Hal
+                        <span id="halaman_review">25</span></h5>
+                    <button type="reset" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="berikutny"
+                        id="preview_next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                </div>
+                <div class="modal-body" id="image_preview_body">
+                    <img src="" id="imagepreview" style="width: 100%; height: 100%">
+                    <div class="upper_left">
+                        <button type="reset" class="btn btn-info btn-sm d-none tambah_result" data-toggle="tooltip"
+                            data-placement="top" title="Tambahkan ke hasil" id="add_from_preview">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="privew_modal_hasil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Preview Hasil</h4>
+                </div>
+                <div class="modal-body" id="body_hasil_pdf">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+    <script>
+        var urlCreteasil = "{% url 'create_hasil' %}";
+        var urlSearchResult = "{% url 'hasil_cari' %}";
+        var jenis = "{{jenis}}";
+        var data_hal = [];
+        var hasil = [];
+        
+         {% for item_hal in hasil %}
+            hasil.push({
+                'uuid': "{{item_hal.uuid}}",
+                'halaman': "{{item_hal.halaman}}",
+                'halaman_url': "{{item_hal.halaman_url}}"
+            }); 
+        {% endfor %}
+        
+        //alert(JSON.stringify(hasil));
+
+        //alert(page_pub+1);
+
+        {% for item_hal in hasilHal %}
+            data_hal.push({
+                uuid_publikasi: '{{item_hal.uuid_publikasi}}',
+                judul: '{{item_hal.judul}}',
+                seksi: '{{item_hal.seksi}}',
+                deskripsi: '{{item_hal.deskripsi}}',
+                halaman: '{{item_hal.halaman}}',
+                halaman_image: '{{item_hal.halaman_image}}'
+            }); 
+        {% endfor %}
+
+        //alert(JSON.stringify(data_hal));
+
+        var halaman_image_pertama = '';
+        var halaman_image_terakhir = '';
+        if (data_hal.length != 0) {
+            halaman_image_pertama = data_hal[0]['halaman_image'];
+            halaman_image_terakhir = data_hal[data_hal.length - 1]['halaman_image'];
+        }
+    </script>
+    {% endblock %}

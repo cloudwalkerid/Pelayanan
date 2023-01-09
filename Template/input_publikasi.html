@@ -1,0 +1,365 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- MAIN CONTENT-->
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Koleksi Publikasi Admin</h3>
+                    <div class="table-data__tool">
+
+                        <div class="table-data__tool-left">
+                            <form method="GET" action="{% url 'masukkan_publikasi' %}">
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="banyak" id="banyak">
+                                        <option selected value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="seksi" id="seksi">
+                                        <option selected="selected" value="">Seksi</option>
+                                        <option value="ipds">IPDS</option>
+                                        <option value="nerwilis">Nerwilis</option>
+                                        <option value="sosial">Sosial</option>
+                                        <option value="produksi">Produksi</option>
+                                        <option value="distribusi">Distibusi</option>
+                                        <option value="tu">TU</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                {% endif %}
+                                <input class="au-input" type="text" name="search" id="search" placeholder="Kata Kunci"
+                                    style="margin-right: 10px" />
+                                <button class="btn au-btn-filter" type="submit">
+                                    <i class="zmdi zmdi-filter-list"></i>filters</button>
+                            </form>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                                data-target="#addNewPublikasi">
+                                <i class="zmdi zmdi-plus"></i>Tambah Publikasi</button>
+                        </div>
+                    </div>
+                    {% if publikasis is None %}
+                    <h3 class="title-5 m-b-35">Tidak ada Publikasi</h3>
+                    {% else %}
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>nama</th>
+                                    <th>deskripsi</th>
+                                    <th>seksi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for item_publikasi in publikasis %}
+                                    <tr class="tr-shadow">
+                                        <td style="width :150px; padding: 20px" class="koleksi-publikasi-item">
+                                            {% if item_publikasi.type_pub == 'pdf' %}
+                                            {% with 'media/Publikasi/images/'|add:item_publikasi.uuid|add:'-1.jpg' as cover_publikasi%}
+                                            <img height="150px;" width="150px;" src="{% static cover_publikasi %}" />
+                                            {% endwith %}
+                                            {% elif item_publikasi.type_pub == 'xlsx' or item_publikasi.type_pub == 'xls' %}
+                                            <img height="150px;" width="150px;" src="{% static 'images/excel.png' %}" />
+                                            {% endif %}
+                                           
+                                        </td>
+                                        <td>{{item_publikasi.judul}}</td>
+                                        <td class="desc">{{item_publikasi.deskripsi}}</td>
+                                        <td style="width: 100px">
+                                            <span class="status--process" style="text-transform: uppercase">{{item_publikasi.seksi}}</span>
+                                        </td>
+                                        <td>
+                                            <div class="table-data-feature">
+                                                {% if item_publikasi.type_pub == 'pdf' %}
+                                                {% with 'media/Publikasi/pdf/'|add:item_publikasi.uuid|add:'.pdf' as url_pdf%}
+                                                <button class="item edit_pub" data-toggle="tooltip" data-placement="top" title="Ubah" data-pub="{{item_publikasi.uuid}}" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% elif item_publikasi.type_pub == 'xlsx' %}
+                                                {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xlsx' as url_pdf%}
+                                                <button class="item edit_pub" data-toggle="tooltip" data-placement="top" title="Ubah" data-pub="{{item_publikasi.uuid}}" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% elif item_publikasi.type_pub == 'xls' %}
+                                                {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xls' as url_pdf%}
+                                                <button class="item edit_pub" data-toggle="tooltip" data-placement="top" title="Ubah" data-pub="{{item_publikasi.uuid}}" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% endif %}
+                                
+                                                <button class="item hapus_pub" data-toggle="tooltip" data-placement="top" title="Hapus" data-pub="{{item_publikasi.uuid}}">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </button>
+                                                {% if item_publikasi.type_pub == 'pdf' %}
+                                                {% with 'media/Publikasi/pdf/'|add:item_publikasi.uuid|add:'.pdf' as url_pdf%}
+                                                <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-download"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% elif item_publikasi.type_pub == 'xlsx' %}
+                                                {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xlsx' as url_pdf%}
+                                                <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-download"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% elif item_publikasi.type_pub == 'xls' %}
+                                                {% with 'media/Publikasi/excell/'|add:item_publikasi.uuid|add:'.xls' as url_pdf%}
+                                                <button class="item download_pub" data-toggle="tooltip" data-placement="top" title="Unduh" data-url="{% static url_pdf %}">
+                                                    <i class="zmdi zmdi-download"></i>
+                                                </button>
+                                                {% endwith %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="spacer"></tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;"></nav>
+                    {% if publikasis.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if publikasis.has_previous %}
+                        <li class="page-item"><a href="?page={{ publikasis.previous_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in publikasis.paginator.page_range %}
+                        {% if publikasis.number == i %}
+                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                        <li class="page-item"><a href="?page={{ i }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">{{
+                                i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if publikasis.has_next %}
+                        <li class="page-item"><a href="?page={{ publikasis.next_page_number }}&seksi={{ seksi }}&banyak={{ banyak }}&search={{ search }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                    </nav>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- END MAIN CONTENT-->
+<!-- END PAGE CONTAINER-->
+<div class="modal fade" id="addNewPublikasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Publikasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_publikasi' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action" name="action" value="tambah" required>
+                    <div class="form-group">
+                        <label for="new-publikasi-judul" class="col-form-label">Judul Publikasi :</label>
+                        <input type="text" class="form-control" id="new-publikasi-judul" name="judul" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-deskripsi" class="col-form-label">Deskripsi Publikasi :</label>
+                        <textarea class="form-control" id="new-publikasi-deskripsi" name="deskripsi" required></textarea>
+                    </div>
+                    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Seksi :</label>
+                        <select class="js-select2" name="seksi" required>
+                            <option value="ipds" selected>IPDS</option>
+                            <option value="nerwilis">Nerwilis</option>
+                            <option value="sosial">Sosial</option>
+                            <option value="produksi">Produksi</option>
+                            <option value="distribusi">Distibusi</option>
+                            <option value="tu">TU</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                    {% else %}
+                    <input type="text" class="d-none" name="seksi" value="{{user.seksi}}" required>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama-tanggal_terbit" class="col-form-label">Tanggal Terbit :</label>
+                        <input type="text" class="form-control" id="new-publikasi-nama-tanggal_terbit" name="tanggal_terbit" data-provide="datepicker" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-nama-data_tahun" class="col-form-label">Data Tahun :</label>
+                        <input type="text" class="form-control" id="new-publikasi-nama-data_tahun" name="data_tahun" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-tags" class="col-form-label">Tags :</label>
+                        <textarea class="form-control" id="new-publikasi-tags" name="tags" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Publikasi :</label>
+                        <input type="file" id="new-publikasi-file" name="file" accept=".xls,.xlsx,.pdf" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPublikasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Perbarui Publikasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_publikasi' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action_edit" name="action" value="ubah" required>
+                    <input type="text" class="d-none" id="uuid_edit" name="uuid"  required>
+                    <div class="form-group">
+                        <label for="new-publikasi-judul" class="col-form-label">Judul Publikasi :</label>
+                        <input type="text" class="form-control" id="judul-edit" name="judul" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-deskripsi" class="col-form-label">Deskripsi Publikasi :</label>
+                        <textarea class="form-control" id="deskripsi-edit" name="deskripsi" required></textarea>
+                    </div>
+                    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama" class="col-form-label">Seksi :</label>
+                        <select class="js-select2" id="seksi-edit" name="seksi" required>
+                            <option value="ipds" selected>IPDS</option>
+                            <option value="nerwilis">Nerwilis</option>
+                            <option value="sosial">Sosial</option>
+                            <option value="produksi">Produksi</option>
+                            <option value="distribusi">Distibusi</option>
+                            <option value="tu">TU</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                    {% else %}
+                    <input type="text" class="d-none" id="seksi-edit" name="seksi" value="{{user.seksi}}" required>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="new-publikasi-nama-tanggal_terbit" class="col-form-label">Tanggal Terbit :</label>
+                        <input type="text" class="form-control" id="tanggal_terbit-edit" name="tanggal_terbit" data-provide="datepicker" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-nama-data_tahun" class="col-form-label">Data Tahun :</label>
+                        <input type="text" class="form-control" id="data_tahun-edit" name="data_tahun" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-tags" class="col-form-label">Tags :</label>
+                        <textarea class="form-control" id="tags-edit" name="tags" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-publikasi-file" class="col-form-label">File Publikasi Baru:</label>
+                        <input type="file" id="file-edit" name="file" accept=".xls,.xlsx,.pdf"/>
+                    </div>
+                    <a href="" id="file-lama">Fail Publikasi Lama</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="hapusPublikasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Hapus Publikasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'masukkan_publikasi' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                        {% csrf_token %}
+                    <input type="text" class="d-none" id="action_hapus" name="action" value="hapus" required>
+                    <input type="text" class="d-none" id="uuid_hapus" name="uuid"  required>
+                    <p>Apakah anda yakin menghapus publikasi <br/><b><span id="nama_hapus"></span></b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var banyak = '{{banyak}}';
+    var seksi = '{{seksi}}';
+    var search = '{{search}}';
+    document.getElementById("banyak").value = banyak;
+    {% if user.seksi == 'ipds' or user.jabatan == 'kepala' %}
+    document.getElementById("seksi").value = seksi;
+    {% endif %}
+    document.getElementById("search").value = search;
+</script>
+<script>
+    var publikasi_list = [];
+
+    {% for item_publikasi in publikasis %}
+        publikasi_list.push({
+            uuid: '{{item_publikasi.uuid}}',
+            judul: '{{item_publikasi.judul}}',
+            deskripsi: '{{item_publikasi.deskripsi}}',
+            isi: '{{item_publikasi.isi}}',
+            seksi: '{{item_publikasi.seksi}}',
+            tag: '{{item_publikasi.tag}}',
+            tanggal_terbit: '{{item_publikasi.tanggal_terbit|date:"m/d/Y"}}',
+            type_pub: '{{item_publikasi.type_pub}}',
+            data_tahun: '{{item_publikasi.data_tahun}}'
+        });
+    {% endfor %}
+    // alert(publikasi_list);
+</script>
+{% endblock %}

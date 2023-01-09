@@ -1,0 +1,126 @@
+{% extends 'all_menu_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">Koleksi Tabelmu</h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <form method="GET" action="{% url 'koleksi_tabel' %}">
+                                <div class="rs-select2--light rs-select2--sm">
+                                    <select class="js-select2" name="banyak" id="banyak">
+                                        <option selected value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                                <input class="au-input" type="text" name="search" id="search" placeholder="Kata Kunci"
+                                    style="margin-right: 10px" />
+                                <button class="btn au-btn-filter" type="submit">
+                                    <i class="zmdi zmdi-filter-list"></i>filters</button>
+                            </form>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                                data-target="#addNewPublikasi">
+                                <i class="zmdi zmdi-plus"></i>Buat Tabel</button>
+                        </div>
+                    </div>
+                    {% if tableShow is None %}
+                    <h3 class="title-5 m-b-35">Tidak ada Publikasi</h3>
+                    {% else %}
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th>nama</th>
+                                    <th>deskripsi</th>
+                                    <th>seksi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item_table in tableShow %}
+                                <tr class="tr-shadow">
+                                    <td>{{item_table.nama}}</td>
+                                    <td class="desc">{{item_table.deskripsi}}</td>
+                                    <td style="width: 100px">
+                                        <span class="status--process" style="text-transform: uppercase">{{item_table.seksi}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <button class="item salin_button"  data-uuid="{{item_table.uuid}}" data-toggle="tooltip" data-placement="top" title="Salin">
+                                                <i class="zmdi zmdi-copy"></i>
+                                            </button>
+                                            <button class="item run_button" data-uuid="{{item_table.uuid}}" data-toggle="tooltip" data-placement="top" title="Jalankan">
+                                                <i class="zmdi zmdi-play"></i>
+                                            </button>
+                                            <button class="item delete_button" data-toggle="tooltip" data-placement="top" title="Hapus" data-uuid="{{item_table.uuid}}">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                    <nav aria-label="Page navigation example" style="margin-top: 30px; margin-bottom: 100px;"></nav>
+                    {% if tableShow.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if tableShow.has_previous %}
+                        <li class="page-item"><a href="?page={{ tableShow.previous_page_number }}&banyak={{ banyak }}&search={{ search }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in tableShow.paginator.page_range %}
+                        {% if tableShow.number == i %}
+                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                        <li class="page-item"><a href="?page={{ i }}&banyak={{ banyak }}&search={{ search }}">{{
+                                i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if tableShow.has_next %}
+                        <li class="page-item"><a href="?page={{ tableShow.next_page_number }}&banyak={{ banyak }}&search={{ search }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var banyak = '{{banyak}}';
+    var search = '{{search}}';
+    document.getElementById("banyak").value = banyak;
+    document.getElementById("search").value = search;
+    var make_excell_hasil_URL = "{% url 'make_excell_hasil' %}";
+    var hasilTabelURL = "{% url 'hasil_tabel' %}";
+    var buat_tabel_URL = "{% url 'buat_tabel' %}"
+    var koleksi_tabel_URL = "{% url 'koleksi_tabel' %}"
+</script>
+{% endblock %}
